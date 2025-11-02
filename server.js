@@ -152,5 +152,5 @@ app.post('/send', async (req, res) => {
 })
 
 // 🚀 Iniciar servidor
-const PORT = 3000
+const PORT = 8080
 app.listen(PORT, () => console.log(`✅ Servidor activo en http://localhost:${PORT}`))
