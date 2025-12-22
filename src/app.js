@@ -6,6 +6,9 @@ import sendRoutes from './routes/send.routes.js'
 import incomingRoutes, { handleIncomingMessages } from './routes/incoming.routes.js'
 
 import { connectToWhatsApp } from './whatsapp/socket.js'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const app = express()
 app.use(bodyParser.json())
@@ -19,6 +22,8 @@ app.use('/incoming', incomingRoutes)
 // Conectar WhatsApp
 connectToWhatsApp(handleIncomingMessages)
 
-app.listen(8080, () =>
-  console.log('🚀 Servidor en http://localhost:8080')
+const port = process.env.PORT || 8080;
+
+app.listen(port, () =>
+  console.log(`🚀 Servidor en http://localhost:${port}`)
 )

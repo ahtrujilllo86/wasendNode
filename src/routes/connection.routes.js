@@ -30,14 +30,14 @@ router.get('/', (req, res) => {
         </style>
       </head>
       <body>
-        <h1>WhatsApp Web Control</h1>
+        <h1>WhatsApp Web Control by flowooo</h1>
         <div id="qr-container"><p>Cargando QR...</p></div>
-        <h2>Enviar mensaje</h2>
+       <!-- <h2>Enviar mensaje</h2>
         <form id="sendForm">
           <input type="text" id="number" placeholder="Número (ej. 5215555555555)" required />
           <textarea id="message" placeholder="Escribe tu mensaje..." required></textarea>
           <button type="submit">Enviar mensaje</button>
-        </form>
+        </form> -->
         <div id="status"></div>
         <script>
           async function updateQR() {
@@ -46,7 +46,7 @@ router.get('/', (req, res) => {
             const container = document.getElementById('qr-container')
 
             if (data.qr) {
-              container.innerHTML = '<img src="' + data.qr + '" width="300" />'
+              container.innerHTML = '<img src="' + data.qr + '" width="300" /><br><h2>Escanear para conectar</h2>'
             } else if (data.connected) {
               container.innerHTML = '<h3>✅ Ya estás conectado a WhatsApp</h3>'
             } else {

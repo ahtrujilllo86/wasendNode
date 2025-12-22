@@ -3,13 +3,25 @@ import { sock, isConnected } from '../whatsapp/state.js'
 
 const router = express.Router()
 
+// Defautl Texto
+router.post('/', async (req, res) => {
+  const { number, message } = req.body
+  if (!sock || !isConnected)
+    return res.json({ success: false, error: 'No conectado' })
+
+  const jid = number.includes('@s.whatsapp.net') ? number : `${number}@s.whatsapp.net`
+  await sock.sendMessage(jid, { text: message })
+  res.json({ success: true })
+})
+
+
 // Texto
 router.post('/text', async (req, res) => {
   const { number, message } = req.body
   if (!sock || !isConnected)
     return res.json({ success: false, error: 'No conectado' })
 
-  const jid = `${number}@s.whatsapp.net`
+  const jid = number.includes('@s.whatsapp.net') ? number : `${number}@s.whatsapp.net`
   await sock.sendMessage(jid, { text: message })
   res.json({ success: true })
 })
