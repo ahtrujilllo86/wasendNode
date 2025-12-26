@@ -1,0 +1,20 @@
+services:
+
+  db:
+    image: mysql:8.0 # O puedes usar tu imagen personalizada: mi-mysql-personalizado
+    container_name: mysql_server
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: mi_app_db
+      MYSQL_USER: user_app
+      MYSQL_PASSWORD: user_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql:Z
+      # - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:Z # Opcional: inicializar
+
+
+volumes:
+  db_data:
