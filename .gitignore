@@ -1,3 +1,4 @@
 node_modules
 session
 /src/generated/prisma
+/.env

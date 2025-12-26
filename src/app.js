@@ -6,8 +6,11 @@ import sendRoutes from './routes/send.routes.js'
 import incomingRoutes, { handleIncomingMessages } from './routes/incoming.routes.js'
 
 import { connectToWhatsApp } from './whatsapp/socket.js'
+const { connectDB, prisma } = require('./db');
 
 const app = express()
+connectDB();
+
 app.use(bodyParser.json())
 app.use(express.static('public'))
 
