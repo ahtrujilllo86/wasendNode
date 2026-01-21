@@ -43,12 +43,101 @@ async function connectToWhatsApp() {
 
   sock.ev.on('creds.update', saveCreds)
 
-  sock.ev.on('messages.upsert', (msg) => {
-    const message = msg.messages[0]
-    if (!message.key.fromMe) {
-      const text = message.message?.conversation || message.message?.extendedTextMessage?.text
-      console.log('📩 Mensaje recibido de:', message.key.remoteJid, '→', text)
+  // receipt messages
+
+  /**
+   * ENUM messageTypes
+   */
+  const messageTypes = {
+    CONVERSATION: 'conversation',
+    ORDERMESSAGE: 'orderMessage',
+    UNKNOWN: 'unknown'
+  }
+
+ /**
+ * Normalizes a WhatsApp/Baileys message object into a unified structure.
+ *
+ * @param {Object} message - Raw message object received from Baileys.
+ *
+ * @returns {Object} normalizedMessage
+ * @returns {string} normalizedMessage.type - Message type based on messageTypes enum.
+ * @returns {Object|string} normalizedMessage.data - Conversation text or orderMessage object.
+ *
+ * @example
+ * const result = normalizeMessage(msg.message)
+ * // { type: messageTypes.CONVERSATION, data: "Hola" }
+ *
+ * @example
+ * const result = normalizeMessage(msg.message)
+ * // { type: messageTypes.ORDERMESSAGE, data: { ... } }
+ */
+  function normalizeMessage(message) {
+  if (!message || typeof message !== 'object') {
+    return { 
+      type: messageTypes.UNKNOWN ,
+      data: 'unknown'
     }
+  }
+
+  if (message.orderMessage) {
+    return {
+      type: messageTypes.ORDERMESSAGE,
+      data: message.orderMessage
+    }
+  }
+
+  if (message.conversation) {
+    return {
+      type: messageTypes.CONVERSATION,
+      data: message.conversation
+    }
+  }
+
+  return { 
+    type: messageTypes.UNKNOWN ,
+    data: 'unknown'
+  }
+}
+
+  sock.ev.on('messages.upsert', (msg) => {
+    const { message } = msg.messages[0];
+
+    const result = normalizeMessage(message)
+
+    const { type, data } = result;
+
+    switch (type) {
+      case messageTypes.CONVERSATION:
+        console.log('Texto recibido:', result.texto)
+        // continuar flujo normal
+        break
+
+      case messageTypes.ORDERMESSAGE:
+        console.log('Pedido recibido')
+        // procesar carrito / pedido
+        break
+
+      default:
+        console.log('Mensaje no soportado')
+    }
+
+    /**
+     * Example or orderMessage
+     */
+    // "orderMessage": {
+    //   "orderId": "1070098418585461",
+    //   "itemCount": 3,
+    //   "status": "INQUIRY",
+    //   "surface": "CATALOG",
+    //   "message": "",
+    //   "orderTitle": "esp32c3 con placa, esp32cam, esp32 s2mini",
+    //   "sellerJid": "169106535886903@lid",
+    //   "token": "Ad8M3SJp550gWHPvDeL/p7O8ZD4UIXuTEv8T+ADfdHovng==",
+    //   "totalAmount1000": "780000",
+    //   "totalCurrencyCode": "MXN",
+    //   "messageVersion": 2,
+    //   "catalogType": "NATIVE"
+    // }
   })
 }
 
