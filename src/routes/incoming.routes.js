@@ -147,7 +147,6 @@ export async function handleIncomingMessages(msg) {
 
   // verificamos que la respuesta de openAi sea exitosa
   if (!parsedResponse.success) {
-    console.log('¡Ups! La farse no me queda del todo clara 😢\n\nPuedes volver a escribirme? ✏️');
     return saveAndProcessMessage(messageFormatOutput, 'OUTGOING', 1500);
   }
 
